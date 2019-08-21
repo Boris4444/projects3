@@ -5,35 +5,33 @@ import java.util.List;
 
 public class FlearCalculations {
 	
-//	private List<Flear> flearsTemp;
-//	private List<Flear> bestFlears;
-//	
-//	public FlearCalculations() {
-//		flearsTemp = new ArrayList<Flear>();
-//		bestFlears = new ArrayList<Flear>();
-//	}
+	private static int result;
+	private static Flear[] bestFlears;
+	
 	
 	public static int getOptimalValue(float money, List<Flear> flears) {
 		
 		// vorbesetzen
+		result = 0;
 		int res = 0;		
 		Flear[] flearsTemp = new Flear[flears.size()];
 		//Boolean[] flearsPickmap = new Boolean[flears.size()];
-		Flear[] bestFlears = new Flear[flears.size()];
+		bestFlears = new Flear[flears.size()];
 		int summe = 0;
 		int stelle = 0;
 		
 		// sobald liste nicht leer ist
 		if(flears.size() > 0) {			
 			
-			nextPos(flears, flearsTemp, bestFlears, summe, res, money, stelle);
+			nextPos(flears, flearsTemp, summe, money, stelle);
 			
-		}		
+		}
+		res = result;
 		return res;
 	}
 	
 	// rekursiv geht die Methode einen Schritt weiter nach rechts in der Liste und geht dort weiterhin alle Kombinationen durch
-	public static void nextPos(List<Flear> flears, Flear[] flearsTemp, Flear[] bestFlears, int summe, int res, float money, int stelle) {
+	public static void nextPos(List<Flear> flears, Flear[] flearsTemp, int summe, float money, int stelle) {
 		
 		// zwei zustände. erster zustand: floh wird ausgewählt. zweiter zustand: floh wird nicht ausgewählt
 		for(int i = 0; i < 2; i++) {
@@ -44,9 +42,8 @@ public class FlearCalculations {
 				summe += flears.get(stelle).getRating(); // Bewertung wird aufsummiert
 				
 				// Abfrage bzw Vergleich ob Optimum
-				// nicht sicher ob das bei den verschiedenen pfaden funktioniert, globale variablen... summe, res, bestFlares
-				if(money >= 0 && summe > res) {
-					res = summe;
+				if(money >= 0 && summe > result) {
+					result = summe;
 					bestFlears = flearsTemp.clone();
 				}
 				
@@ -58,7 +55,7 @@ public class FlearCalculations {
 			
 			// solange die letzte pos nicht erreicht wurde
 			if(stelle != (flears.size()-1)) {
-				nextPos(flears, flearsTemp, bestFlears, summe, res, money, stelle+1); // nächster Schritt... stelle wird um 1 erhöht übergeben
+				nextPos(flears, flearsTemp, summe, money, stelle+1); // nächster Schritt... stelle wird um 1 erhöht übergeben
 			}
 			
 		}
